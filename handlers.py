@@ -5,7 +5,6 @@ from aiogram.filters import CommandStart
 from aiogram.types import Message
 
 from constants import DATA_FORMAT_EXAMPLE
-# from create_bot import db
 from utils import (
     get_data_from_db, pack_data_to_message, parse_data_from_message
 )
