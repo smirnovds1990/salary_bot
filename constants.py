@@ -1,3 +1,12 @@
+import os
+
+from dotenv import load_dotenv
+
+
+load_dotenv()
+
+TOKEN = os.getenv('TOKEN')
+DATABASE_URI = os.getenv('DATABASE_URI')
 GROUP_TYPES = {
     'hour': {
         "year": {"$year": "$dt"},
