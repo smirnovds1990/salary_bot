@@ -1,6 +1,8 @@
 import json
 from datetime import datetime as dt
 
+from dateutil.rrule import rrule
+
 from constants import DATETIME_FORMAT, GROUP_TYPES
 from create_bot import db
 
@@ -13,7 +15,11 @@ def parse_data_from_message(text):
     return start, stop, group_type
 
 
-async def get_data_from_db(start, stop, group_type):
+def get_period_of_time(start, stop, period_item):
+    return list(rrule(freq=period_item, dtstart=start, until=stop))
+
+
+async def get_data_from_db(start, stop, group_type, period):
     type_to_group = GROUP_TYPES[group_type]
     pipeline = [
         {
@@ -58,11 +64,18 @@ async def get_data_from_db(start, stop, group_type):
 
     cursor = db.aggregate(pipeline)
     total_data = await cursor.to_list(length=None)
+    total_data_dict = {
+        item['date']: item['total_value'] for item in total_data
+    }
+    dates = [dt.isoformat(date) for date in period]
     dataset = []
     labels = []
-    for data_dict in total_data:
-        dataset.append(data_dict['total_value'])
-        labels.append(data_dict['date'])
+    for date in dates:
+        if date in total_data_dict:
+            dataset.append(total_data_dict[date])
+        else:
+            dataset.append(0)
+        labels.append(date)
     return dataset, labels
 
 

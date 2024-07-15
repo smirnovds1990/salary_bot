@@ -1,5 +1,6 @@
 import os
 
+from dateutil.rrule import DAILY, HOURLY, MONTHLY
 from dotenv import load_dotenv
 
 
@@ -23,6 +24,11 @@ GROUP_TYPES = {
         "year": {"$year": "$dt"},
         "month": {"$month": "$dt"}
     }
+}
+PERIOD_ITEMS = {
+    'hour': HOURLY,
+    'day': DAILY,
+    'month': MONTHLY
 }
 DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S'
 DATA_FORMAT_EXAMPLE = {
